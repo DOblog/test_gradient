@@ -1,27 +1,9 @@
 import React, { Component } from 'react';
 
-// const obj = {
-//   a: 3, 
-//   f() {
-//     console.log(this.a)
-//   }
-// }
-
-// const f2 = obj.f;
-
-// obj.f();
-// f2();
-
-// # 123adc  
-
-const validSymbols = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F'];
+const regEx = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
 
 function isValidColorValue(str) {
-  if (!(str[0] === '#' && str.length === 7)) return false;
-  for (let i = 1; i < str.length; i++) {
-    if (!validSymbols.includes(str[i])) return false;
-  }
-  return true;
+  return regEx.test(str);
 }
 
 class App extends Component {
@@ -30,43 +12,35 @@ class App extends Component {
     secondColor: ''
   }
 
-  handleFirstColorInput = (event) => {
+  handleColorInput = (stateColorField) => (event) => {
     this.setState({
-      firstColor: event.target.value
-    });
+      [stateColorField]: event.target.value
+    }, this.changeBackground);
   }
 
-  handleSecondColorInput = (event) => {
-    this.setState({
-      secondColor: event.target.value
-    });
-  }
+  changeBackground = () => {
+    // const firstColor = this.state.firstColor;
+    // const secondColor = this.state.secondColor;
+    const { firstColor, secondColor } = this.state;
 
-  handleClick = (event) => {
-    // linear-gradient(to top, #aaa, #27a)
-    // linear-gradient(to top, this.state.firstColor, this.state.secondColor)
-    // const background = 'linear-gradient(to top, ' + this.state.firstColor +', ' + this.state.secondColor + ')';
-    const background = `linear-gradient(to top, ${this.state.firstColor}, ${this.state.secondColor})`;
-    this.setState({
-      background
-    });
+    if (isValidColorValue(firstColor) && isValidColorValue(secondColor)) {
+      const background = `linear-gradient(to top, ${firstColor}, ${secondColor})`;
+      this.setState({ background });
+    }
   }
 
   render() {
+    const { firstColor, secondColor, background } = this.state;
+
     return (
       <div
         className="wrapper"
-        style={{
-          background: this.state.background
-        }}>
-        <input value={this.state.firstColor} onChange={this.handleFirstColorInput} />
-        <input value={this.state.secondColor} onChange={this.handleSecondColorInput} />
-        <button
-          onClick={this.handleClick}
-          disabled={!isValidColorValue(this.state.firstColor) || !isValidColorValue(this.state.secondColor)}
-        >
-          Go
-        </button>
+        style={{ background }}
+      >
+        <div className="inner">
+          <input value={firstColor} onChange={this.handleColorInput('firstColor')} />
+          <input value={secondColor} onChange={this.handleColorInput('secondColor')} />
+        </div>
       </div>
     )
   }
