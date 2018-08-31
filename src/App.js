@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const regEx = /^#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})$/;
 
@@ -6,7 +6,7 @@ function isValidColorValue(str) {
   return regEx.test(str);
 }
 
-class App extends Component {
+class App extends React.Component {
   state = {
     firstColor: '',
     secondColor: ''
@@ -42,7 +42,7 @@ class App extends Component {
           <input value={secondColor} onChange={this.handleColorInput('secondColor')} />
         </div>
       </div>
-    )
+    );
   }
 }
 
